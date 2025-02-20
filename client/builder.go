@@ -23,6 +23,7 @@ const (
 )
 
 type (
+	//La funcino new devuelve un struct que implementa esta interfaz (y funciones)
 	Transport interface {
 		Get(url string) *Response
 		Post(url string, body interface{}) *Response
@@ -56,6 +57,9 @@ type (
 	}
 )
 
+// Se le pasan headers, la url base (host sin path), un timeout, y un boolean para log
+// Devuelve un inetrfaz de Transport que tiene los meteodos (GET, POST, PUT, PATCH, ETC)
+// Devuevle el struct ReequestBulders (que implement Trapsoert), un struct que tiene los datos como parametros
 func New(header http.Header, baseURL string, connectTimeout time.Duration, logTime bool) Transport {
 	return &RequestBuilder{
 		Headers:        header,
@@ -65,6 +69,8 @@ func New(header http.Header, baseURL string, connectTimeout time.Duration, logTi
 	}
 }
 
+// Metodos del struct RequestBulder:
+// Todo devuelve un Response (que esta en el msimo package)
 func (rb *RequestBuilder) Get(url string) *Response {
 	return rb.doRequest(http.MethodGet, url, nil)
 }

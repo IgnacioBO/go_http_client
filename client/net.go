@@ -12,14 +12,19 @@ import (
 	"time"
 )
 
+// Recibo el verbo (http.MethdodGet por ejemplo devuevle el string "GET"), reqURL es el path (/user por ej),
+// El body se PSAA COMO INTERFACE (osea un struct)
 func (rb *RequestBuilder) doRequest(verb string, reqURL string, reqBody interface{}) (result *Response) {
 
 	start := time.Now()
 
+	//Unimos base + path
 	reqURL = rb.BaseURL + reqURL
 
+	//Genramos un response
 	result = new(Response)
 
+	//Metodo que se encarga de hacer conversion del struct a un arrau de bytes
 	body, err := rb.marshalReqBody(reqBody)
 	if err != nil {
 		result.Err = err
@@ -30,6 +35,7 @@ func (rb *RequestBuilder) doRequest(verb string, reqURL string, reqBody interfac
 		return result
 	}
 
+	//Mock es de test
 	mock := getMock(verb, reqURL)
 
 	var httpResp *http.Response
@@ -39,8 +45,10 @@ func (rb *RequestBuilder) doRequest(verb string, reqURL string, reqBody interfac
 			Body:       nopCloser{bytes.NewBufferString(mock.RespBody)},
 		}
 	} else {
+		//Genera un client de http estandar de go
 		client := rb.getClient()
 
+		//Defino NewRequest con verb, url y body
 		request, err := http.NewRequest(verb, reqURL, bytes.NewBuffer(body))
 		if err != nil {
 			result.Err = err
@@ -51,7 +59,7 @@ func (rb *RequestBuilder) doRequest(verb string, reqURL string, reqBody interfac
 			return result
 		}
 
-		// Set extra parameters
+		// Set extra parameters, parametros ADICIONALES, se setean headers como el content type, accept, etc (si es json, xml, segun los campos del struct)
 		rb.setParams(request)
 
 		// Make the request
@@ -66,7 +74,7 @@ func (rb *RequestBuilder) doRequest(verb string, reqURL string, reqBody interfac
 		}
 	}
 
-	// Read response
+	// Read response, leo respuesta
 	defer httpResp.Body.Close()
 	respBody, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
@@ -90,6 +98,7 @@ func (rb *RequestBuilder) doRequest(verb string, reqURL string, reqBody interfac
 
 func (rb *RequestBuilder) marshalReqBody(body interface{}) (b []byte, err error) {
 	if body != nil {
+		//ContentType es un enum de INT, siendo 0 (por defcto) JSON
 		switch rb.ContentType {
 		case JSON:
 			b, err = json.Marshal(body)

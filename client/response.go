@@ -1,5 +1,7 @@
 package client
 
+//Los Get, Post del build devuelve un response
+
 import (
 	"encoding/json"
 	"encoding/xml"
@@ -8,6 +10,7 @@ import (
 	"strings"
 )
 
+// Struct que tiene response, error y body
 type Response struct {
 	*http.Response
 	Err      error
@@ -26,6 +29,8 @@ func (r *Response) SetBytes(bytes []byte) {
 	r.byteBody = bytes
 }
 
+// Metodo que permite pasarle una interfaz y rellenar la interfaz con LA RESPUESTA en JSON
+// Osea decodifica el JSON/XML que recibi cono Respone a una struct X y LLENA un STRUCT
 func (r *Response) FillUp(fill interface{}) error {
 	ctypeJSON := "application/json"
 	ctypeXML := "application/xml"

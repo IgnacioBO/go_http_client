@@ -1,5 +1,10 @@
 package client
 
+//Replicar funcioanldai sin que haga nada
+// por ejemplo, si el clinte hace un get a un X servicoi, definimos un mock como si le pegar al servicio sin pegar
+//Mock le definimos "me vas a deovlar esto cuando haga el get"
+//Como esta mockedo se hace para test
+
 import (
 	"fmt"
 	"net/http"
