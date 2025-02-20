@@ -1,3 +1,3 @@
-module github.com/ncostamagna/go_http_client
+module github.com/IgnacioBO/go_http_client
 
-go 1.19
+go 1.23.4
