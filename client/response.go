@@ -12,9 +12,9 @@ import (
 
 // Struct que tiene response, error y body
 type Response struct {
-	*http.Response
-	Err      error
-	byteBody []byte
+	*http.Response //Esto de poner *struct permite HEREDAR del mismo
+	Err            error
+	byteBody       []byte
 }
 
 func (r *Response) String() string {
